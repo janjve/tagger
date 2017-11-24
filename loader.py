@@ -164,11 +164,15 @@ def augment_with_pretrained(dictionary, ext_emb_path, words):
     assert os.path.isfile(ext_emb_path)
 
     # Load pretrained embeddings from file
-    pretrained = set([
-        line.rstrip().split()[0].strip()
-        for line in codecs.open(ext_emb_path, 'r', 'utf-8')
-        if len(ext_emb_path) > 0
-    ])
+    pretrained = set([])
+    if len(ext_emb_path) > 0:
+        for line in codecs.open(ext_emb_path, 'r'):
+            try:
+                a = line.rstrip().split()[0].strip()
+            except IndexError:
+                print line
+                raise IndexError('...')
+            pretrained.add(a)
 
     # We either add every word in the pretrained file,
     # or only words given in the `words` list to which
